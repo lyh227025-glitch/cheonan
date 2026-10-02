@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>업무지원 현황 개선 시범 대시보드 구축 계획(안)</title>
+<style>
+  :root{
+    --bg:#f4f7fb;
+    --panel:#ffffff;
+    --line:#dfe6ef;
+    --text:#1f2937;
+    --muted:#64748b;
+    --navy:#173b63;
+    --blue:#2d6fb7;
+    --sky:#eaf3fb;
+    --warn:#fff7e8;
+    --warn-line:#f3c86b;
+    --green:#eaf7f0;
+    --green-line:#9fd2b4;
+    --shadow:0 8px 24px rgba(15, 23, 42, .06);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Pretendard","Noto Sans KR","Apple SD Gothic Neo",Arial,sans-serif;
+  }
+  .page{
+    width:min(1440px, calc(100% - 32px));
+    margin:16px auto;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  header{
+    padding:22px 28px 18px;
+    background:linear-gradient(135deg,#173b63 0%,#225d92 65%,#2d6fb7 100%);
+    color:#fff;
+  }
+  .eyebrow{font-size:13px;opacity:.8;margin-bottom:6px;letter-spacing:.02em}
+  h1{margin:0;font-size:28px;line-height:1.25}
+  .subtitle{margin-top:8px;font-size:14px;opacity:.88}
+  .grid{
+    display:grid;
+    grid-template-columns:1.05fr 1.05fr .9fr;
+    gap:14px;
+    padding:16px;
+  }
+  .card{
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px;
+    background:#fff;
+    min-height:0;
+  }
+  .card h2{
+    margin:0 0 12px;
+    font-size:16px;
+    color:var(--navy);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .badge{
+    display:inline-grid;
+    place-items:center;
+    width:25px;height:25px;
+    border-radius:8px;
+    background:var(--sky);
+    color:var(--blue);
+    font-size:13px;
+    font-weight:700;
+  }
+  ul{margin:0;padding-left:18px}
+  li{margin:6px 0;line-height:1.45}
+  .small{font-size:13px;color:var(--muted)}
+  .facts{grid-column:span 2}
+  .decision{background:var(--warn);border-color:var(--warn-line)}
+  .decision h2{color:#8b5a00}
+  .flow{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+  }
+  .step{
+    flex:1 1 120px;
+    min-width:110px;
+    border:1px solid #cfe0f0;
+    background:#f8fbfe;
+    border-radius:12px;
+    padding:11px 10px;
+    text-align:center;
+    font-size:13px;
+    font-weight:700;
+    color:#244d73;
+  }
+  .arrow{color:#8aa9c6;font-weight:700}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:9px 8px;border-bottom:1px solid #edf1f5;text-align:left;vertical-align:top}
+  th{width:28%;color:#47617b;font-weight:700;background:#fafcfe}
+  tr:last-child th,tr:last-child td{border-bottom:0}
+  .pill{
+    display:inline-block;
+    padding:4px 8px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:700;
+    margin:2px 4px 2px 0;
+    background:#eef5fb;
+    color:#2a5c88;
+    border:1px solid #d7e6f4;
+  }
+  .notice{
+    margin-top:10px;
+    padding:10px 12px;
+    border-radius:12px;
+    background:#f8fafc;
+    border:1px dashed #cbd5e1;
+    font-size:12.5px;
+    color:#556579;
+  }
+  .check{
+    background:var(--green);
+    border-color:var(--green-line);
+  }
+  .footer{
+    padding:0 16px 16px;
+  }
+  .footer-box{
+    border:1px solid #b9c9da;
+    background:#f8fbff;
+    border-radius:14px;
+    padding:13px 15px;
+    font-size:12.5px;
+    color:#526274;
+  }
+  .status-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
+  .status{padding:10px;border-radius:10px;text-align:center;font-weight:700;font-size:12.5px;border:1px solid #dbe6ef;background:#fbfdff}
+  @media (max-width:980px){
+    .grid{grid-template-columns:1fr 1fr}
+    .facts{grid-column:span 2}
+    .decision{grid-column:span 2}
+  }
+  @media (max-width:680px){
+    .page{width:100%;margin:0;border-radius:0}
+    .grid{grid-template-columns:1fr;padding:10px}
+    .facts,.decision{grid-column:span 1}
+    header{padding:20px 18px}
+    h1{font-size:23px}
+    .status-row{grid-template-columns:repeat(2,1fr)}
+  }
+  @media print{
+    @page{size:A4 landscape;margin:10mm}
+    body{background:#fff}
+    .page{width:100%;margin:0;border:none;box-shadow:none;border-radius:0}
+    .grid{gap:10px;padding:10px}
+    .card{break-inside:avoid;padding:12px}
+    header{padding:16px 18px}
+    h1{font-size:23px}
+    .subtitle{font-size:12px}
+    body{font-size:12px}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="eyebrow">결재용 1페이지 요약</div>
+    <h1>업무지원 현황 개선 시범 대시보드 구축 계획(안)</h1>
+    <div class="subtitle">교육용 합성데이터 기반 시범 구축 후 실제 운영 적용 여부 검토</div>
+  </header>
+
+  <main class="grid">
+    <section class="card facts">
+      <h2><span class="badge">1</span> 추진 배경 및 현황</h2>
+      <ul>
+        <li>월간 보고자료 작성에 많은 시간이 소요된다는 의견이 제기됨.</li>
+        <li>요청 처리상태를 통일하고, 긴급도가 높은 미완료 건을 우선 확인할 필요가 있음.</li>
+        <li>실제 운영 전 교육용 시범 화면을 제작하고 결과 검토 후 적용 여부를 결정하기로 함.</li>
+      </ul>
+      <div class="status-row">
+        <div class="status">접수</div>
+        <div class="status">진행중</div>
+        <div class="status">완료</div>
+        <div class="status">보류</div>
+      </div>
+    </section>
+
+    <section class="card decision">
+      <h2><span class="badge">!</span> 의사결정이 필요한 사항</h2>
+      <strong>교육용 합성데이터를 활용한 시범 대시보드 제작을 추진하고, 시범 결과 검토 후 실제 운영 적용 여부를 별도 결정할지 여부</strong>
+      <div class="notice">실제 운영 전환 시 일정·담당자·예산은 별도 검토 필요</div>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">2</span> 주요 추진내용</h2>
+      <table>
+        <tr><th>시범 구축</th><td>교육용 합성데이터 기반 대시보드 제작</td></tr>
+        <tr><th>상태관리</th><td>접수 / 진행중 / 완료 / 보류 기준 적용 검토</td></tr>
+        <tr><th>우선관리</th><td>긴급도 ‘상’ + 미완료 건 우선 확인</td></tr>
+        <tr><th>개인정보</th><td>실제 개인정보 미사용</td></tr>
+        <tr><th>운영검토</th><td>시범 결과 후 실제 적용 여부 결정</td></tr>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">3</span> 실행 절차</h2>
+      <div class="flow">
+        <div class="step">요구사항 정리</div><div class="arrow">→</div>
+        <div class="step">합성데이터 구성</div><div class="arrow">→</div>
+        <div class="step">시범 제작</div><div class="arrow">→</div>
+        <div class="step">결과 검토</div><div class="arrow">→</div>
+        <div class="step">적용 여부 결정</div>
+      </div>
+    </section>
+
+    <section class="card check">
+      <h2><span class="badge">4</span> 기대효과</h2>
+      <ul>
+        <li>요청 처리현황의 일관된 관리방식 검토</li>
+        <li>긴급 미완료 건 우선 확인 지원</li>
+        <li>월간 보고자료 작성 지원 가능성 확인</li>
+      </ul>
+      <div class="notice">정량적 효과는 근거자료가 없어 추가 확인 필요</div>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">5</span> 추가 확인사항</h2>
+      <span class="pill">서비스 전환 일정</span>
+      <span class="pill">운영 담당자</span>
+      <span class="pill">소요예산</span>
+      <span class="pill">대시보드 세부 항목</span>
+      <span class="pill">시범 결과 평가기준</span>
+      <div class="notice">현재 실제 서비스 전환 일정과 운영 담당자는 미정이며, 예산도 확인되지 않음.</div>
+    </section>
+  </main>
+
+  <div class="footer">
+    <div class="footer-box">
+      <strong>작성 원칙</strong> · 확인되지 않은 예산·일정·담당자·성과수치는 임의로 기재하지 않음 · 시범 단계는 실제 개인정보를 포함하지 않는 교육용 합성데이터 활용
+    </div>
+  </div>
+</div>
+</body>
+</html>
